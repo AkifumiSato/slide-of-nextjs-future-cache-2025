@@ -7,19 +7,17 @@ colorSchema: "dark"
 drawings:
   persist: false
 transition: slide-left
-title: Legacy Next.js, Present Next.js Future Next.js
+title: Next.js Caching - Legacy, Improvement, Re-Architecture
 mdc: true
 ---
 
-<div class="flex justify-center">
-<div class="glass p-10">
-
 ## Next.js Caching
 
-Legacy, Present, Future
+Legacy, Improvement, Re-Architecture
 
-</div>
-</div>
+<style>
+.yellow {}
+</style>
 
 ---
 
