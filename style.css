@@ -1,2 +1,20 @@
+.legacy,
+.improvement,
+.re-architecture {
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+}
 
+.legacy {
+  background-image: linear-gradient(to right, #ff7e5f, #feb47b);
+}
 
+.improvement {
+  background-image: linear-gradient(to right, #43e97b, #3bb2b8);
+}
+
+.re-architecture {
+  background-image: linear-gradient(to right, #c07cffff, #3195ffff);
+}
