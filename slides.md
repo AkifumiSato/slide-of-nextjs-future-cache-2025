@@ -77,8 +77,6 @@ transition: fade
 | 2020/07 | Next.js@v9.5    | ISR対応                             |
 
 ---
-transition: fade
----
 
 # Next.js History
 
@@ -92,16 +90,15 @@ transition: fade
 
 ---
 
-# Next.js History
+# Next.jsの価値観
 
-Next.jsの歴史とキャッシュ
+For performance, efficiency and developer experience.
 
-- Next.jsが重視する2つの価値
-  - 高いパフォーマンス
-  - 優れた開発体験
+- Next.jsは「デフォルトで高いパフォーマンス」を非常に重視している
 - App Routerのパフォーマンスを支える要素
+  - SSR
   - Streaming
-  - **Caching**
+  - <span v-mark="{ color: 'red', type: 'circle' }" class="font-semibold">Caching</span>
 
 ---
 layout: section
@@ -110,25 +107,64 @@ layout: section
 <h2><span class="legacy">Legacy</span> Cache</h2>
 
 ---
+transition: fade
+---
 
-# App Router登場当初のCache
+# Next.js Cache
 
-Cacheに関してはOpinionatedな設計と仕様だった
+Next.jsには4種類のCacheがある
 
-- 積極的にキャッシュを活用
-- バグと複雑な仕様が絡み合い、[議論が加熱](https://github.com/vercel/next.js/discussions/54075)した
-- [2年前のJSConf JP](https://jsconf.jp/2023/talk/akfm-sato-1/)では、Router Cacheがいかに複雑な仕様か解説した
-  TBW
+- Request Memoization
+- Data Cache
+- Full Route Cache
+- Router Cache
 
 ---
 
-# Router Cache
+# Next.js Cache
+
+Next.jsには4種類のCacheがある
+
+<div class="flex justify-center">
+  <img src="/cache-architecture.png" alt="Next.js Cache Architecture" class="h-100">
+</div>
+
+---
+
+<h1><span class="legacy">Legacy</span> Cache</h1>
+
+App Router初期のCacheは不評だった
+
+- デフォルトでCacheを活用し、Opt-out方式だった
+- 当初のバグや複雑な仕様が絡み合い、[議論が加熱](https://github.com/vercel/next.js/discussions/54075)した
+  - 参考: [2年前のJSConf JP](https://jsconf.jp/2023/talk/akfm-sato-1/)
+
+---
+transition: fade
+---
+
+# 複雑な仕様
+
+`fetch`が動くかどうかわかりづらい
+
+TBW
+
+---
+transition: fade
+---
+
+# 複雑な仕様
+
+必要な設定ができない、複雑な設定が多すぎる
 
 TBW: 30s破棄できない実装について、ドキュメントもなかったこと明記
-TBW: Intercepting RoutesがセルフCache poisoningみたいなことになってた
 
 ---
+transition: fade
+---
 
-# Data Cache
+# 複雑な仕様
 
-TBW: Otp out方法が複数あり自明でなかった
+キャッシュ周りの実装が煩雑で、バグが多かった
+
+TBW: Intercepting RoutesがセルフCache poisoningみたいなことになってた

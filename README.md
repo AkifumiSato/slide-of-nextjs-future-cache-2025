@@ -1,11 +1,9 @@
-# Welcome to [Slidev](https://github.com/slidevjs/slidev)!
+# Slide: Next.js Caching - Legacy, Improvement, Re-Architecture
 
-To start the slide show:
+## Slide
 
-- `pnpm install`
-- `pnpm dev`
-- visit <http://localhost:3030>
+- [slides.md](./slides.md)
 
-Edit the [slides.md](./slides.md) to see the changes.
+## Event
 
-Learn more about Slidev at the [documentation](https://sli.dev/).
+[JSConf JP 2025](https://jsconf.jp/2025/ja/talks/nextjs-caching-re-architecture)
