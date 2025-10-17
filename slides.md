@@ -104,7 +104,7 @@ For performance, efficiency and developer experience.
 layout: section
 ---
 
-<h2><span class="legacy">Legacy</span> Cache</h2>
+<h1><span class="legacy">Legacy</span> Cache</h1>
 
 ---
 transition: fade
@@ -143,28 +143,105 @@ App Router初期のCacheは不評だった
 transition: fade
 ---
 
-# 複雑な仕様
+# Pain point: `fetch`とキャッシュ
 
 `fetch`が動くかどうかわかりづらい
 
-TBW
+```tsx
+export default async function Page() {
+  // Q. この`getRandomTodo()`はキャッシュされる/されない？🤔
+  const { todo } = await getRandomTodo();
+  // ...
+}
+```
+
+<div v-click class="mt-5">
+
+### A. 設定や実装次第
+
+- Full Route Cache: 設定や実装次第
+  - デフォルトではCacheされる
+  - PageやLayoutの設定でCacheをOpt outできる
+  - `cookies()`や`headers()`をどこかで使ってたらCacheされない
+- Data Cache: `fetch()`のオプション次第ではCacheされない
+- Router Cache: Router Cacheは5m or 30s必ずCacheされる
+
+</div>
 
 ---
 transition: fade
 ---
 
-# 複雑な仕様
+# Pain point: 設定の設計
 
 必要な設定ができない、複雑な設定が多すぎる
 
-TBW: 30s破棄できない実装について、ドキュメントもなかったこと明記
+- Router Cache
+  - 5m or 30s必ずCacheされる（ドキュメントに記載なし）
+  - 時間を設定できない
+- Full Route Cache, Data Cache
+  - 実装と設定が遠くなりがち
+  - 設定が複雑すぎ
+
+```tsx
+export const fetchCache = "auto";
+// 'auto' | 'default-cache' | 'only-cache'
+// 'force-cache' | 'force-no-store' | 'default-no-store' | 'only-no-store'
+```
 
 ---
-transition: fade
+
+# Pain point: バグや脆弱性
+
+煩雑な実装起因のバグや脆弱性
+
+- e.g. Intercepting RoutesでRouter Cacheが不安定な挙動になる
+  - 参考: [vercel/next.js#52748](https://github.com/vercel/next.js/pull/52748)
+  - キャッシュのキーの明らかな考慮漏れ
+  - 修正するには抜本的な再設計が必要だった
+
+---
+layout: fact
 ---
 
-# 複雑な仕様
+## App Router登場当初のCacheは<br>ともかく悩みの種だった
 
-キャッシュ周りの実装が煩雑で、バグが多かった
+---
+layout: fact
+---
 
-TBW: Intercepting RoutesがセルフCache poisoningみたいなことになってた
+## Next.js開発チームには<br>多くのフィードバックが寄せられた
+
+---
+layout: section
+---
+
+<h1>Cache <span class="improvement">Improvement</span></h1>
+
+---
+
+# Discussion
+
+Next.js開発チームはコミュニティとの議論を開始
+
+- [Deep Dive: Caching and Revalidating](https://github.com/vercel/next.js/discussions/54075)
+  - 開発チームとコミュニティで論点やユースケースを擦り合わせつつ、慎重に方針を検討
+  - 「コミュニティが求めてるユースケースは何か？」
+  - 「Router Cacheの寿命は設定できれば解決するのか？他の解決方法はないのか？」
+- v14~15で少しづつ改善が進む
+
+---
+
+# Improvement: Router Cacheの設定やドキュメント
+
+コミュニティのフィードバックをもとに、Router Cacheの設定やドキュメントを改善
+
+TBW: PPRのことも触れる
+
+---
+
+# Improvement: `fetch()`の改善
+
+v15で[`fetch()`のデフォルトが変更](https://nextjs.org/blog/next-15-rc#caching-updates)
+
+TBW
