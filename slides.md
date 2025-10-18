@@ -289,4 +289,85 @@ const res = await fetch(`https://...`, {
 
 ---
 
-# Background: PPRの発明
+# Improvement: Partial Pre-Rendering(PPR)
+
+PPRの発見が議論を大きく変えた
+
+- 従来はページ単位でDynamic, Static Renderingを決定する必要があった
+- PPR: ページをStatic Renderingに、部分的にDynamic Renderingが可能に
+
+<div class="flex justify-center">
+  <img src="/ppr.png" alt="PPR" class="h-80">
+</div>
+
+---
+layout: fact
+---
+
+## Next.js v13~v15でCacheは<br>丁寧に着実に改善された
+
+---
+layout: fact
+---
+
+## しかし、4種類のCacheは<br>根本的な複雑さを伴った
+
+---
+layout: fact
+---
+
+## そこに唐突に現れたのが<br>`"use cache"`である
+
+---
+layout: section
+---
+
+<h1>Cache <span class="re-architecture">Re-Architecture</span></h1>
+
+---
+transition: fade
+---
+
+<h1>Cache <span class="re-architecture">Re-Architecture</span></h1>
+
+根本的なCacheの再設計
+
+- `"use cache"`でCache対象のファイルや関数をマークする
+  - 既存のCacheとは全く異なる仕組み
+  - CacheのキーはNext.jsが自動で検出する
+- Cacheの属性はNext.jsのAPIで設定
+  - `cacheLife(profile)`, `cacheTag(tagName)`
+
+---
+transition: fade
+---
+
+# Cache <span class="re-architecture">Re-Architecture</span>
+
+可読性が明らかに向上
+
+```tsx {all|3}
+// Before
+export default async function Page() {
+  // 🤔この`getRandomTodo()`はキャッシュされる/されない？
+  const { todo } = await getRandomTodo();
+  // ...
+}
+```
+
+```tsx {all|2,5}
+// After
+"use cache";
+
+export default async function Page() {
+  // 💡`"use cache"`があるのでこのComponentは明らかにCache対象
+  const { todo } = await getRandomTodo();
+  // ...
+}
+```
+
+---
+
+# Architecture: RSCの拡張
+
+TBW
