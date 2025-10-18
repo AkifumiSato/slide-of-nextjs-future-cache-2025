@@ -220,28 +220,73 @@ layout: section
 
 ---
 
-# Discussion
+<h1>Cache <span class="improvement">Improvement</span></h1>
 
 Next.js開発チームはコミュニティとの議論を開始
 
-- [Deep Dive: Caching and Revalidating](https://github.com/vercel/next.js/discussions/54075)
+- Discussion: [_Deep Dive: Caching and Revalidating_](https://github.com/vercel/next.js/discussions/54075)
   - 開発チームとコミュニティで論点やユースケースを擦り合わせつつ、慎重に方針を検討
   - 「コミュニティが求めてるユースケースは何か？」
   - 「Router Cacheの寿命は設定できれば解決するのか？他の解決方法はないのか？」
-- v14~15で少しづつ改善が進む
+- 主にv14~15で少しづつ改善が進む
+  - ドキュメントの充実
+  - `staleTimes`オプション
+  - `fetch()`のデフォルトCache廃止
 
 ---
 
-# Improvement: Router Cacheの設定やドキュメント
+# Improvement: Document
 
-コミュニティのフィードバックをもとに、Router Cacheの設定やドキュメントを改善
+あまりに不足していたドキュメントの拡充
 
-TBW: PPRのことも触れる
+- ドキュメントがなかった頃は挙動観察やコードリーディングしかなかった
+  - [Next.js App Router 知られざるClient-side Cacheの仕様](https://zenn.dev/akfm/articles/next-app-router-client-cache)
+- [Caching in Next.js](https://nextjs.org/docs/app/guides/caching)
+  - Cacheの種類、デフォルトの挙動、図など詳細な説明が追加
+  - Static, Dynamic Renderingやこれらの条件になるDynamic APIsの定義など
 
 ---
 
-# Improvement: `fetch()`の改善
+# Improvement: Router Cache
 
-v15で[`fetch()`のデフォルトが変更](https://nextjs.org/blog/next-15-rc#caching-updates)
+初見殺しな仕様が改善
 
-TBW
+- v14.2: `staleTimes`オプションが追加、Router Cacheの寿命を設定可能に
+- v15: `staleTimes`のデフォルトが30sから0sに
+
+```ts
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  experimental: {
+    staleTimes: {
+      dynamic: 30,
+      static: 180,
+    },
+  },
+};
+
+export default nextConfig;
+```
+
+---
+
+# Improvement: `fetch()` cached by default
+
+`fetch()`のデフォルトCacheが廃止
+
+- v15: `fetch()`のデフォルトが変更
+  - Opt-in型になったことで直感的に
+
+```tsx
+const res = await fetch(`https://...`, {
+  // `undefined`(default): Data Cacheは無効、ただしDynamic Renderingには**ならない**
+  // `"no-store"`: Data Cacheは無効、Dynamic Renderingを強制
+  // `"force-cache"`: Data Cacheは有効
+  cache: "force-cache",
+});
+```
+
+---
+
+# Background: PPRの発明
