@@ -332,14 +332,13 @@ transition: fade
 
 根本的なCacheの再設計
 
+- 新たなCacheは、<span v-mark="{ color: 'red', type: 'underline' }" class="font-semibold">RSCの世界観を拡張</span>する形で設計されてる
 - `"use cache"`でCache対象のファイルや関数をマークする
   - 既存のCacheとは全く異なる仕組み
   - CacheのキーはNext.jsが自動で検出する
 - Cacheの属性はNext.jsのAPIで設定
   - `cacheLife(profile)`, `cacheTag(tagName)`
 
----
-transition: fade
 ---
 
 # Cache <span class="re-architecture">Re-Architecture</span>
@@ -367,7 +366,129 @@ export default async function Page() {
 ```
 
 ---
+transition: fade
+---
 
-# Architecture: RSCの拡張
+# Architecture: RSCと`"use cache"`
 
-TBW
+RSCは「2つの世界、2つのドア」
+
+<div class="flex justify-center mt-5">
+  <img src="/rsc-doors.png" alt="RSC Door" class="h-80">
+</div>
+
+---
+
+# Architecture: RSCと`"use cache"`
+
+`"use cache"`はCacheの世界へのドア
+
+<div class="flex justify-center mt-5">
+  <img src="/cache-doors.png" alt="Cache Door" class="h-80">
+</div>
+
+---
+transition: fade
+---
+
+# Architecture: Composable Cache
+
+`"use cache"`によるCacheはComposable
+
+```tsx
+export default async function Post(props: { params: Promise<{ id: string }> }) {
+  const { id } = await props.params;
+
+  return (
+    {/* <Post>: Cached */}
+    <Post id={1}>
+      {/* <UserProfile>: Not Cached */}
+      <UserProfile />
+    </Post>
+  );
+}
+```
+
+---
+
+# Architecture: Composable Cache
+
+`"use cache"`によるCacheはComposable
+
+```tsx
+async function Post({
+  id,
+  children,
+}: {
+  id: number;
+  children: React.ReactNode;
+}) {
+  "use cache";
+  const post = await getPost(id);
+
+  return (
+    <>
+      <h1>{post.title}</h1>
+      {children}
+    </>
+  );
+}
+```
+
+---
+
+# Note: Re-Architecture Process
+
+なぜ最初からこういう設計ができなかったのか
+
+- CacheのRe-Architectureは[Sebastian Markbåge](https://ja.react.dev/community/team#sebastian-markb%C3%A5ge)氏がリード
+  - React, Next.js開発チームのメンバー
+  - ReactのhooksやFiberの設計に大きく貢献した人物
+  - 抽象化の導入に非常に慎重な姿勢
+    > "It's much easier to recover from no abstraction than the wrong abstraction." — Sebastian Markbåge
+    > 「間違った抽象化から回復するよりも、抽象化がない状態から回復する方がずっと簡単だ」— Sebastian Markbåge
+- コミュニティのフィードバックや、PPRの発見を経たからこそ実現した設計
+- `"use cache"`は、彼らの丁寧な仕事の積み重ねの成果とも言える
+
+---
+
+# Note: Router Cache
+
+並行してRouter CacheのRe-Architectureも推進
+
+- `"use cache"`はサーバー側Cacheの話なので、Router Cacheは別課題
+- Router Cacheの技術的負債を刷新し、効率的なCache管理、Navigationの最適化を目指す
+- 現在も実装中（`experimental.clientSegmentCache`）
+- [Andrew Clark](https://ja.react.dev/community/team#andrew-clark)氏がリードしてRe-Architecture
+  - React開発チームのメンバー
+  - ReactのhooksやSuspenseに大きく貢献した人物
+
+---
+
+# Note: `vite-plugin-react-use-cache`
+
+TBW: 状況注視して追記
+
+https://www.npmjs.com/package/vite-plugin-react-use-cache
+
+---
+layout: section
+---
+
+# Conclusion
+
+---
+
+# Conclusion
+
+振り返ると、Next.js開発チームの仕事ぶりは素晴らしいものだった
+
+- `"use cache"`は素晴らしく、Next.jsのトレードオフの1つが大きく改善されたと言える
+- 個人的にもNext.jsを人に勧めることへの抵抗が減った
+- 「Next.js、よくなったんだな」ということが伝われば嬉しい
+
+---
+layout: fact
+---
+
+## Thanks
