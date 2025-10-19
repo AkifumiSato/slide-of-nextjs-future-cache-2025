@@ -446,6 +446,7 @@ async function Post({
   - ReactのhooksやFiberの設計に大きく貢献した人物
   - 抽象化の導入に非常に慎重な姿勢
     > "It's much easier to recover from no abstraction than the wrong abstraction." — Sebastian Markbåge
+    >
     > 「間違った抽象化から回復するよりも、抽象化がない状態から回復する方がずっと簡単だ」— Sebastian Markbåge
 - コミュニティのフィードバックや、PPRの発見を経たからこそ実現した設計
 - `"use cache"`は、彼らの丁寧な仕事の積み重ねの成果とも言える

@@ -3,6 +3,7 @@
 ## Slide
 
 - [slides.md](./slides.md)
+- [github pages](https://akifumisato.github.io/slide-of-nextjs-future-cache-2025/1)
 
 ## Event
 
