@@ -36,6 +36,7 @@ mdc: true
   "tags": ["Next.js", "React", "Test", "リーン開発"],
   "sns": {
     "x": "akfm_sato",
+    "GitHub": "AkifumiSato",
     "zenn.dev": "akfm",
   },
 }
@@ -70,8 +71,8 @@ transition: fade
 | 年      | 概要            | 詳細                                |
 | ------- | --------------- | ----------------------------------- |
 | 2013/05 | Reactが公開     |                                     |
-| 2016/10 | Next.jsが公開   | React＋SSRが広く認知される          |
-| 2018~   | Gatsby.jsの台頭 | SSR->SSGが注目される                |
+| 2016/10 | Next.jsが公開   |                                     |
+| 2018~   | Gatsby.jsの台頭 | SSGが注目される                     |
 | 2019/07 | Next.js@v9.0    | dynamicルーティング・Typescript対応 |
 | 2020/03 | Next.js@v9.3    | SSG対応                             |
 | 2020/07 | Next.js@v9.5    | ISR対応                             |
@@ -159,11 +160,11 @@ export default async function Page() {
 
 ### A. 設定や実装次第
 
-- Full Route Cache: 設定や実装次第
+- Full Route Cache, Data Cache: 設定や実装次第
   - デフォルトではCacheされる
   - PageやLayoutの設定でCacheをOpt outできる
   - `cookies()`や`headers()`をどこかで使ってたらCacheされない
-- Data Cache: `fetch()`のオプション次第ではCacheされない
+  - `fetch()`のオプション次第ではCacheされない
 - Router Cache: Router Cacheは5m or 30s必ずCacheされる
 
 </div>
@@ -184,9 +185,14 @@ transition: fade
   - 設定が複雑すぎ
 
 ```tsx
+export const dynamic = "auto";
+// 'auto' | 'force-dynamic' | 'error' | 'force-static'
 export const fetchCache = "auto";
 // 'auto' | 'default-cache' | 'only-cache'
 // 'force-cache' | 'force-no-store' | 'default-no-store' | 'only-no-store'
+export const revalidate = false;
+// false | 0 | number
+// ...
 ```
 
 ---
@@ -346,21 +352,27 @@ transition: fade
 可読性が明らかに向上
 
 ```tsx {all|3}
-// Before
-export default async function Page() {
-  // 🤔この`getRandomTodo()`はキャッシュされる/されない？
-  const { todo } = await getRandomTodo();
+/**
+ * Before🤔
+ * - 呼び出し側の設定や実装によって、キャッシュされる/されないが決まる
+ * - この関数の実装次第で、呼び出し側もキャッシュされる/されないが決まる
+ */
+export async function getRandomTodo() {
+  const res = await fetch(`https://...`);
   // ...
 }
 ```
 
 ```tsx {all|2,5}
-// After
-"use cache";
+/**
+ * After💡
+ * - `"use cache"`があるので、この関数は明らかにCache対象
+ * - 呼び出し側にキャッシュされる/されないが影響しない
+ */
+export async function getRandomTodo() {
+  "use cache";
 
-export default async function Page() {
-  // 💡`"use cache"`があるのでこのComponentは明らかにCache対象
-  const { todo } = await getRandomTodo();
+  const res = await fetch(`https://...`);
   // ...
 }
 ```
@@ -421,6 +433,7 @@ async function Post({
   children,
 }: {
   id: number;
+  // 📝`ReactNode`はCacheのキーに含まれず、Composableに扱える
   children: React.ReactNode;
 }) {
   "use cache";
@@ -428,6 +441,7 @@ async function Post({
 
   return (
     <>
+      {/* 📝`children`などのpropsを除き、動的なコンポーネントは扱えない */}
       <h1>{post.title}</h1>
       {children}
     </>
@@ -443,7 +457,7 @@ async function Post({
 
 - CacheのRe-Architectureは[Sebastian Markbåge](https://ja.react.dev/community/team#sebastian-markb%C3%A5ge)氏がリード
   - React, Next.js開発チームのメンバー
-  - ReactのhooksやFiberの設計に大きく貢献した人物
+  - Reactのビジョンに強く貢献
   - 抽象化の導入に非常に慎重な姿勢
     > "It's much easier to recover from no abstraction than the wrong abstraction." — Sebastian Markbåge
     >
@@ -462,7 +476,7 @@ async function Post({
 - 現在も実装中（`experimental.clientSegmentCache`）
 - [Andrew Clark](https://ja.react.dev/community/team#andrew-clark)氏がリードしてRe-Architecture
   - React開発チームのメンバー
-  - ReactのhooksやSuspenseに大きく貢献した人物
+  - Reactの実装に強く貢献
 
 ---
 
