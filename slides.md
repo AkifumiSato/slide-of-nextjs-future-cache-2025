@@ -87,7 +87,7 @@ transition: fade
 | 2022/10 | Next.js@v13.0  | App Router(Beta)                  |
 | 2023/05 | Next.js@v13.4  | App Router(Stable)                |
 | 2024/10 | Next.js@v15.0  | `params`などの破壊的変更、PPRなど |
-| 2025/10 | Next.js@v16.0  | TBW                               |
+| 2025/10 | Next.js@v16.0  | `cacheComponents`                 |
 
 ---
 
@@ -479,11 +479,26 @@ async function Post({
 
 ---
 
-# Note: `vite-plugin-react-use-cache`
+# Note: [`vite-plugin-react-use-cache`](https://www.npmjs.com/package/vite-plugin-react-use-cache)
 
-TBW: 状況注視して追記
+ViteのRSC関連プラグインとして、`"use cache"`をサポートするプラグイン
 
-https://www.npmjs.com/package/vite-plugin-react-use-cache
+- おそらく開発中の段階
+
+```tsx
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import rsc from '@vitejs/plugin-rsc/plugin';
+import {useCachePlugin } from 'vite-plugin-react-use-cache';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    rsc({ ... }),
+    useCachePlugin(),
+  ],
+});
+```
 
 ---
 layout: section
