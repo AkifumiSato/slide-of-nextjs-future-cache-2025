@@ -162,9 +162,9 @@ export default async function Page() {
 
 - Full Route Cache, Data Cache: 設定や実装次第
   - デフォルトではCacheされる
-  - PageやLayoutの設定でCacheをOpt outできる
   - `cookies()`や`headers()`をどこかで使ってたらCacheされない
   - `fetch()`のオプション次第ではCacheされない
+  - PageやLayoutの設定でCacheをOpt outできる
 - Router Cache: Router Cacheは5m or 30s必ずCacheされる
 
 </div>
@@ -258,7 +258,7 @@ Next.js開発チームはコミュニティとの議論を開始
 初見殺しな仕様が改善
 
 - v14.2: `staleTimes`オプションが追加、Router Cacheの寿命を設定可能に
-- v15: `staleTimes`のデフォルトが30sから0sに
+- v15: `staleTimes.dynamic`のデフォルトが30sから0sに
 
 ```ts
 import type { NextConfig } from "next";
@@ -353,9 +353,10 @@ transition: fade
 
 ```tsx {all|3}
 /**
- * Before🤔
- * - 呼び出し側の設定や実装によって、キャッシュされる/されないが決まる
- * - この関数の実装次第で、呼び出し側もキャッシュされる/されないが決まる
+ * Before: この関数だけ見ても何もわからない🤔
+ * - Static Renderingならbuildやrevalidate時のみ実行される
+ * - Dynamic Renderingなら何度も実行されるが、`fetch()`の結果はCacheされる
+ * - PageやLayoutの設定でCacheをOpt outできる
  */
 export async function getRandomTodo() {
   const res = await fetch(`https://...`);
@@ -365,9 +366,7 @@ export async function getRandomTodo() {
 
 ```tsx {all|2,5}
 /**
- * After💡
- * - `"use cache"`があるので、この関数は明らかにCache対象
- * - 呼び出し側にキャッシュされる/されないが影響しない
+ * After💡: `"use cache"`があるので、この関数はCacheされる
  */
 export async function getRandomTodo() {
   "use cache";
@@ -475,7 +474,7 @@ async function Post({
 - Router Cacheの技術的負債を刷新し、効率的なCache管理、Navigationの最適化を目指す
 - 現在も実装中（`experimental.clientSegmentCache`）
 - [Andrew Clark](https://ja.react.dev/community/team#andrew-clark)氏がリードしてRe-Architecture
-  - React開発チームのメンバー
+  - React, Next.js開発チームのメンバー
   - Reactの実装に強く貢献
 
 ---
@@ -498,9 +497,12 @@ layout: section
 
 振り返ると、Next.js開発チームの仕事ぶりは素晴らしいものだった
 
-- `"use cache"`は素晴らしく、Next.jsのトレードオフの1つが大きく改善されたと言える
-- 個人的にもNext.jsを人に勧めることへの抵抗が減った
-- 「Next.js、よくなったんだな」ということが伝われば嬉しい
+- `"use cache"`
+  - RSCとの親和性、抽象度ともに素晴らしい
+  - Next.js開発チームはコミュニティと真摯に向き合ってくれたと思う
+- `cacheComponents`（PPR&DynamicIO&`"use cache"`）
+  - 洗練された世界観とパフォーマンス
+  - Next.jsの苦しみの1つが大きく改善された
 
 ---
 layout: fact
