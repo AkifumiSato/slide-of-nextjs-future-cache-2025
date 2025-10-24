@@ -87,7 +87,7 @@ transition: fade
 | 2022/10 | Next.js@v13.0  | App Router(Beta)                  |
 | 2023/05 | Next.js@v13.4  | App Router(Stable)                |
 | 2024/10 | Next.js@v15.0  | `params`などの破壊的変更、PPRなど |
-| 2025/10 | Next.js@v16.0  | `cacheComponents`                 |
+| 2025/10 | Next.js@v16.0  | Cache Components                  |
 
 ---
 
@@ -515,7 +515,7 @@ layout: section
 - `"use cache"`
   - RSCとの親和性、抽象度ともに素晴らしい
   - Next.js開発チームはコミュニティと真摯に向き合ってくれたと思う
-- `cacheComponents`（PPR&DynamicIO&`"use cache"`）
+- Cache Components（PPR & DynamicIO & `"use cache"`）
   - 洗練された世界観とパフォーマンス
   - Next.jsの苦しみの1つが大きく改善された
 
