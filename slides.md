@@ -210,7 +210,7 @@ export const revalidate = false;
 layout: fact
 ---
 
-## App Router登場当初のCacheは<br>ともかく悩みの種だった
+## 動的なアプリケーションを作る上で<br>Cacheはともかく悩みの種だった
 
 ---
 layout: fact
@@ -471,8 +471,7 @@ async function Post({
 並行してRouter CacheのRe-Architectureも推進
 
 - `"use cache"`はサーバー側Cacheの話なので、Router Cacheは別課題
-- Router Cacheの技術的負債を刷新し、効率的なCache管理、Navigationの最適化を目指す
-- 現在も実装中（`experimental.clientSegmentCache`）
+- Router Cacheを刷新（通称: SegmentCache）し、Cache管理の効率化やNavigationの最適化を目指す
 - [Andrew Clark](https://ja.react.dev/community/team#andrew-clark)氏がリードしてRe-Architecture
   - React, Next.js開発チームのメンバー
   - Reactの実装に強く貢献
@@ -510,7 +509,7 @@ layout: section
 
 # Conclusion
 
-振り返ると、Next.js開発チームの仕事ぶりは素晴らしいものだった
+Next.jsのCacheはとても良くなった
 
 - `"use cache"`
   - RSCとの親和性、抽象度ともに素晴らしい
@@ -518,6 +517,15 @@ layout: section
 - Cache Components（PPR & DynamicIO & `"use cache"`）
   - 洗練された世界観とパフォーマンス
   - Next.jsの苦しみの1つが大きく改善された
+
+---
+
+# Impressions
+
+これで終わりではない
+
+- Next.jsのCacheはまだまだ変更がありそう
+- しかしここまでを振り返ると、Next.js開発チームの仕事ぶりは素晴らしいものだったと思う
 
 ---
 layout: fact
