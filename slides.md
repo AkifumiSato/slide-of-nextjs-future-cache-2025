@@ -407,14 +407,15 @@ transition: fade
 `"use cache"`によるCacheはComposable
 
 ```tsx
-export default async function Post(props: { params: Promise<{ id: string }> }) {
+// with `generateStaticParams()`
+export default async function PostPage(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
 
   return (
-    {/* <Post>: Cached */}
-    <Post id={1}>
-      {/* <UserProfile>: Not Cached */}
-      <UserProfile />
+    {/* <PostContent>: Cached (`"use cache"`) */}
+    <PostContent id={id}>
+      {/* <AuthorProfile>: Not Cached */}
+      <AuthorProfile postId={id} />
     </Post>
   );
 }
@@ -427,7 +428,7 @@ export default async function Post(props: { params: Promise<{ id: string }> }) {
 `"use cache"`によるCacheはComposable
 
 ```tsx
-async function Post({
+async function PostContent({
   id,
   children,
 }: {
@@ -440,7 +441,6 @@ async function Post({
 
   return (
     <>
-      {/* 📝`children`などのpropsを除き、動的なコンポーネントは扱えない */}
       <h1>{post.title}</h1>
       {children}
     </>
