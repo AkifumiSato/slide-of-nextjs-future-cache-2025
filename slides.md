@@ -351,7 +351,7 @@ transition: fade
 
 可読性が明らかに向上
 
-```tsx {all|3}
+```tsx {all|2}
 /**
  * Before: この関数だけ見ても何もわからない🤔
  * - Static Renderingならbuildやrevalidate時のみ実行される
@@ -433,15 +433,16 @@ async function PostContent({
   children,
 }: {
   id: number;
-  // 📝`ReactNode`はCacheのキーに含まれず、Composableに扱える
   children: React.ReactNode;
 }) {
   "use cache";
+
   const post = await getPost(id);
 
   return (
     <>
       <h1>{post.title}</h1>
+      {/* 📝`ReactNode`はCacheのキーに含まれず、Composableに扱える */}
       {children}
     </>
   );
@@ -488,7 +489,7 @@ ViteのRSC関連プラグインとして、`"use cache"`をサポートするプ
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import rsc from '@vitejs/plugin-rsc/plugin';
-import {useCachePlugin } from 'vite-plugin-react-use-cache';
+import { useCachePlugin } from 'vite-plugin-react-use-cache';
 
 export default defineConfig({
   plugins: [
