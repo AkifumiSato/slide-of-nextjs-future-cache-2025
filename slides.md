@@ -137,7 +137,7 @@ Next.jsには4種類のCacheがある
 App Router初期のCacheは不評だった
 
 - デフォルトでCacheを活用し、Opt-out方式だった
-- 当初のバグや複雑な仕様が絡み合い、[議論が加熱](https://github.com/vercel/next.js/discussions/54075)した
+- 当初のバグや複雑な仕様が絡み合って不評だった
   - 参考: [2年前のJSConf JP](https://jsconf.jp/2023/talk/akfm-sato-1/)
 
 ---
@@ -160,12 +160,12 @@ export default async function Page() {
 
 ### A. 設定や実装次第
 
-- Full Route Cache, Data Cache: 設定や実装次第
-  - デフォルトではCacheされる
-  - `cookies()`や`headers()`をどこかで使ってたらCacheされない
-  - `fetch()`のオプション次第ではCacheされない
-  - PageやLayoutの設定でCacheをOpt outできる
-- Router Cache: Router Cacheは5m or 30s必ずCacheされる
+- サーバー側Cache: 設定や実装次第
+  - `getRandomTodo()`の中身を見ないとわからない
+  - `getRandomTodo()`の外側も見ないとわからない
+- クライアント側Cache: Router Cacheは一定時間必ずCacheされる
+  - Static Rendering: 5m
+  - Dynamic Rendering: 30s
 
 </div>
 
@@ -247,7 +247,7 @@ Next.js開発チームはコミュニティとの議論を開始
 
 - ドキュメントがなかった頃は挙動観察やコードリーディングしかなかった
   - [Next.js App Router 知られざるClient-side Cacheの仕様](https://zenn.dev/akfm/articles/next-app-router-client-cache)
-- [Caching in Next.js](https://nextjs.org/docs/app/guides/caching)
+- [Caching in Next.js](https://nextjs.org/docs/app/guides/caching)の追加
   - Cacheの種類、デフォルトの挙動、図など詳細な説明が追加
   - Static, Dynamic Renderingやこれらの条件になるDynamic APIsの定義など
 
@@ -338,12 +338,12 @@ transition: fade
 
 根本的なCacheの再設計
 
-- 新たなCacheは、<span v-mark="{ color: 'red', type: 'underline' }" class="font-semibold">RSCの世界観を拡張</span>する形で設計されてる
 - `"use cache"`でCache対象のファイルや関数をマークする
   - 既存のCacheとは全く異なる仕組み
   - CacheのキーはNext.jsが自動で検出する
 - Cacheの属性はNext.jsのAPIで設定
   - `cacheLife(profile)`, `cacheTag(tagName)`
+- 新たなCacheは、<span v-mark="{ color: 'red', type: 'underline' }" class="font-semibold">RSCの世界観を拡張</span>する形で設計されてる
 
 ---
 
